@@ -10,60 +10,48 @@
  */
 class Solution {
 public:
+    ListNode* reverse(ListNode* head){
+        ListNode *prev = nullptr;
+        ListNode *curr = head;
 
-    void Add(ListNode*& result, ListNode*& tail, int value) {
-
-        ListNode* newNode = new ListNode(value);
-
-        if (result == nullptr) {
-            result = newNode;
-            tail = newNode;
+        while (curr != nullptr)
+        {
+            ListNode *next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
         }
-        else {
-            tail->next = newNode;
-            tail = newNode;
-        }
+
+        return prev;
     }
-
     void reorderList(ListNode* head) {
-
-        ListNode* temp = head;
-        vector<int> ans;
-
-        while (temp != nullptr) {
-            ans.push_back(temp->val);
+        ListNode *temp = head;
+        int count = 0;
+        while (temp != nullptr)
+        {
+            count++;
             temp = temp->next;
         }
-
-        ListNode* result = nullptr;
-        ListNode* tail = nullptr;
-
-        int first = 0;
-        int second = ans.size() - 1;
-        int k = 0;
-
-        while (first <= second) {
-
-            if (k % 2 == 0) {
-                Add(result, tail, ans[first]);
-                first++;
-            }
-            else {
-                Add(result, tail, ans[second]);
-                second--;
-            }
-
-            k++;
-        }
-
-        // Copy reordered values back into original list
+        count = count / 2;
         temp = head;
-        ListNode* newTemp = result;
-
-        while (temp != nullptr) {
-            temp->val = newTemp->val;
+        for (int i = 0; i < count; i++)
+        {
             temp = temp->next;
-            newTemp = newTemp->next;
+        }
+        ListNode *second = temp->next;
+        temp->next = nullptr;
+        second = reverse(second);
+        ListNode *first = head;
+        while (first != nullptr && second != nullptr)
+        {
+            ListNode *firstNext = first->next;
+            ListNode *secondNext = second->next;
+
+            first->next = second;
+            second->next = firstNext;
+
+            first = firstNext;
+            second = secondNext;
         }
     }
 };
